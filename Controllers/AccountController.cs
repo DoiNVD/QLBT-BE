@@ -234,6 +234,7 @@ namespace NETCORE3.Controllers
                 data
             });
         }
+        //alo
         [HttpPut("Active/{id}")]
         public async Task<ActionResult> Active(string id)
         {
