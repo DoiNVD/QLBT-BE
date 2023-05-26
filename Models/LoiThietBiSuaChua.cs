@@ -14,7 +14,7 @@ namespace NETCORE3.Models
         public Guid Id { get; set; }
 
         [ForeignKey("Loi")]
-        public Guid LoiThietBiSuaChua_Id { get; set; }
+        public Guid Loi_Id { get; set; }
         public Loi Loi { get; set; }
         [ForeignKey("ThietBiSuaChua")]
         public Guid ThietBiSuaChua_Id { get; set; }

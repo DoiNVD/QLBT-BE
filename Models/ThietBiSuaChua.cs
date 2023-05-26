@@ -25,7 +25,7 @@ namespace NETCORE3.Models
         //sử dụng để goi hàm khi lấy mqh 1;1
         public DonViTinh DonViTinh { get; set; }
         [JsonIgnore]
-        public virtual ICollection<LoiThietBiSuaChua> LoiThietBiSuaChuas { get; set; }
+        public virtual ICollection<LoiThietBiSuaChua> loiThietBiSuaChuas { get; set; }
         [NotMapped]
         public List<LoiThietBiSuaChua> lstLois { get; set; }
 
