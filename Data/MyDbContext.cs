@@ -30,14 +30,12 @@ namespace NETCORE3.Data
             public DateTime? DeletedDate { get; set; }
             public ICollection<ApplicationUserRole> UserRoles { get; set; }
             [ForeignKey("DonVi")]
-
             public Guid? DonVi_Id { get; set; }
             public DonVi DonVi  { get; set; }
             [ForeignKey("BoPhan")]
             public Guid? BoPhan_Id { get; set; }
             public BoPhan BoPhan  { get; set; }
             [ForeignKey("ChucVu")]
-
             public Guid? ChucVu_Id { get; set; }
             public ChucVu ChucVu { get; set; }
             [ForeignKey("Phongban")]
@@ -46,7 +44,7 @@ namespace NETCORE3.Data
             [ForeignKey("DonViTraLuong")]
             public Guid? DonViTraLuong_Id { get; set; }
             public DonViTraLuong DonViTraLuong { get; set; }
-
+            //public ChiTietLoiThietBiSuaChua ChiTietLoiThietBiSuaChua { get; set; }
         }
         public class ApplicationRole : IdentityRole<Guid>
         {
@@ -108,7 +106,6 @@ namespace NETCORE3.Data
         public DbSet<ChucVu> chucVus { get; set; }
         public DbSet<Nhom> Nhoms { get; set; }
         public DbSet<Phongban> Phongbans { get; set; }
-
         public DbSet<PhanHoi> PhanHois { get; set; }
         public DbSet<PhuongThucDangNhap> PhuongThucDangNhaps { get; set; }
         public DbSet<DonViTinh> DonViTinhs { get; set; }
@@ -134,7 +131,10 @@ namespace NETCORE3.Data
         public DbSet<KhoThongTinThietBi> khoThongTinThietBis { get; set; }
         public DbSet<HuyBaoTri> HuyBaoTris { get; set; }
         public DbSet<Loi> Lois { get; set; }
-
-
+        public DbSet<ChuyenNgayBaoTri> ChuyeNgayBaoTris { get; set; }
+        public DbSet<TieuChuanBaoTri> tieuChuanBaoTris { get; set; }
+        public DbSet<ThietBiSuaChua> thietbisuachuas { get; set; }
+        public DbSet<LoiThietBiSuaChua> loithietbisuachuas { get; set; }
+       // public DbSet<ChiTietLoiThietBiSuaChua> chitietloithietbisuachuas { get; set; }
     }
 }

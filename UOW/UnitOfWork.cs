@@ -37,9 +37,12 @@ namespace NETCORE3.UOW
         public IKhoLoaiThietBiRepository khoLoaiThietBis { get; private set; }
         public IHuyBaoTriRepository huyBaoTris { get; private set; }
         public ILoiRepository   lois { get; private set; }
-
-
-        private MyDbContext db;
+        public IChuyenNgayBaoTriRepository chuyenNgayBaoTris { get; private set; }
+        public ITieuChuanBaoTriRepository tieuChuanBaoTris { get; private set; }
+        public IThietBiSuaChuaRepository thietBiSuaChuas { get; private set; }
+        public ILoiThietBiSuaChuaRepository loiThietBiSuaChuas { get; private set; }
+     /*   public IChiTietLoiThietBiSuaChuaRepository chiTietLoiThietBiSuaChuas { get; private set; }
+ */       private MyDbContext db;
         public UnitofWork(MyDbContext _db)
         {
             db = _db;
@@ -72,6 +75,12 @@ namespace NETCORE3.UOW
             khoThongTinThietBis = new KhoThongTinThietBiRepository(db);
             khoLoaiThietBis = new KhoLoaiThietBiRepository(db);
             lois = new LoiRepository(db);
+            chuyenNgayBaoTris = new ChuyenNgayBaoTriRepository(db);
+            tieuChuanBaoTris = new TieuChuanBaoTriRepository(db);
+            thietBiSuaChuas = new ThietBiSuaChuaRepository(db);
+            loiThietBiSuaChuas = new LoiThietBiSuaChuaRepository(db);
+           /* chiTietLoiThietBiSuaChuas = new ChiTietLoiThietBiSuaChuaRepository(db);*/
+
         }
         public void Dispose()
         {

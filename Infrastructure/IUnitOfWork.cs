@@ -14,10 +14,8 @@ namespace NETCORE3.Infrastructure
         IPhongBanRepository phongbans { get; }
         IDonViRepository DonVis { get; }
         INhaCungCapRepository NhaCungCaps { get; }
-
         IPhanHoiRepository PhanHois { get; }
         IPhuongThucDangNhapRepository PhuongThucDangNhaps { get; }
-
         IMenu_RoleRepository Menu_Roles { get; }
         ILogRepository Logs { get; }
         IBoPhanRepository BoPhans { get; }
@@ -39,6 +37,13 @@ namespace NETCORE3.Infrastructure
         IKhoThongTinThietBiRepository khoThongTinThietBis { get; }
         IHuyBaoTriRepository huyBaoTris { get; }
         ILoiRepository lois { get; }
+        IChuyenNgayBaoTriRepository chuyenNgayBaoTris { get; }
+        ITieuChuanBaoTriRepository tieuChuanBaoTris { get; }
+        IThietBiSuaChuaRepository thietBiSuaChuas { get; }
+
+        ILoiThietBiSuaChuaRepository loiThietBiSuaChuas { get; }
+       // IChiTietLoiThietBiSuaChuaRepository chiTietLoiThietBiSuaChuas { get; }
+
         int Complete();
   }
 }
