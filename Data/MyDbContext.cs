@@ -44,7 +44,7 @@ namespace NETCORE3.Data
             [ForeignKey("DonViTraLuong")]
             public Guid? DonViTraLuong_Id { get; set; }
             public DonViTraLuong DonViTraLuong { get; set; }
-            //public ChiTietLoiThietBiSuaChua ChiTietLoiThietBiSuaChua { get; set; }
+         
         }
         public class ApplicationRole : IdentityRole<Guid>
         {
@@ -130,11 +130,12 @@ namespace NETCORE3.Data
         public DbSet<KhoLoaiThietBi> khoLoaiThietBis { get; set; }
         public DbSet<KhoThongTinThietBi> khoThongTinThietBis { get; set; }
         public DbSet<HuyBaoTri> HuyBaoTris { get; set; }
-        public DbSet<Loi> Lois { get; set; }
+        public DbSet<Loi> lois { get; set; }
         public DbSet<ChuyenNgayBaoTri> ChuyeNgayBaoTris { get; set; }
         public DbSet<TieuChuanBaoTri> tieuChuanBaoTris { get; set; }
         public DbSet<ThietBiSuaChua> thietbisuachuas { get; set; }
         public DbSet<LoiThietBiSuaChua> loithietbisuachuas { get; set; }
-       // public DbSet<ChiTietLoiThietBiSuaChua> chitietloithietbisuachuas { get; set; }
+       public DbSet<ThucHienBaoTri> thucHienBaoTris { get; set; }
+       public DbSet<TinhTrangBaoTri> tinhTrangBaoTris { get; set; }
     }
 }

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using NETCORE3.Infrastructure;
 using NETCORE3.Models;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +17,7 @@ namespace NETCORE3.Controllers
     [Authorize]
     [Route("api/[controller]")]
     [ApiController]
-    public class ThietBiSuaChuaController : Controller
+    public class ThietBiSuaChuaController : ControllerBase
     {
         private readonly IUnitofWork uow;
         private readonly UserManager<ApplicationUser> userManager;
@@ -29,32 +28,33 @@ namespace NETCORE3.Controllers
             userManager = _userManager;
             environment = _environment;
         }
-      
+
 
         [HttpGet]
         public ActionResult Get(string keyword)
         {
             if (keyword == null) keyword = "";
-            string[] include = { "DonViTinh", "Loi", "loiThietBiSuaChuas", "loiThietBiSuaChuas.Loi" };
-            var data = uow.thietBiSuaChuas.GetAll(t => !t.IsDeleted && (t.MaThietBiSuaChua.ToLower().Contains(keyword.ToLower())), null, include).Select(x => new
+            string[] include = { "DonViTinh", "ThongTinThietBi", "loiThietBiSuaChuas.Loi" };
+            var data = uow.thietBiSuaChuas.GetAll(t => !t.IsDeleted && (t.MaThietBiSuaChua.ToLower().Contains(keyword.ToLower()) || t.ThongTinThietBi.TenThietBi.ToLower().Contains(keyword.ToLower())), null, include).Select(x => new
             {
                 x.Id,
                 x.MaThietBiSuaChua,
                 x.SoLuong,
-                x.DonViTinh.TenDonViTinh,
                 x.GhiChu,
+                x.DonViTinh.TenDonViTinh,
+                x.ThongTinThietBi.TenThietBi,
                 lstLois = x.loiThietBiSuaChuas.Select(y => new
                 {
                     y.Loi.TenLoi,
                 })
-
-            }).ToList();
+            });
             if (data == null)
             {
                 return NotFound();
             }
-            return Ok(data.OrderBy(x => x.MaThietBiSuaChua));
+            return Ok(data.OrderBy(x => x.TenThietBi));
         }
+
 
         public class ClassListThietBiSuaChua
         {
@@ -69,30 +69,31 @@ namespace NETCORE3.Controllers
         }
 
         [HttpGet("GetDataPagnigation")]
-        public ActionResult GetDataPagnigation(int page = 1, int pageSize = 20, string keyword = null)
+        public ActionResult GetDataPagnigation(int page = 1, int pageSize = 2, string keyword = null)
         {
             if (keyword == null) keyword = "";
-            string[] include = { "DonViTinh", "Loi", "LoiThietBiSuaChua", "LoiThietBiSuaChua.Loi" };
+            string[] include = { "DonViTinh", "ThongTinThietBi", "loiThietBiSuaChuas.Loi" };
             var query = uow.thietBiSuaChuas.GetAll(t => !t.IsDeleted && (t.MaThietBiSuaChua.ToLower().Contains(keyword.ToLower()) || t.ThongTinThietBi.TenThietBi.ToLower().Contains(keyword.ToLower())), null, include)
             .Select(x => new
             {
+                x.ThongTinThietBi,
                 x.ThongTinThietBi_Id,
                 x.Id,
                 x.MaThietBiSuaChua,
                 x.DonViTinh_Id,
                 x.SoLuong,
                 x.GhiChu,
-                LstLoi = x.loiThietBiSuaChuas.Select(y => new
+                lstLois = x.loiThietBiSuaChuas.Select(y => new
                 {
                     y.Loi.TenLoi,
                 })
-            })
-            .OrderBy(x => x.MaThietBiSuaChua);
+            }).OrderBy(x => x.ThongTinThietBi_Id);
+
             List<ClassListThietBiSuaChua> list = new List<ClassListThietBiSuaChua>();
 
             foreach (var item in query)
             {
-                var thongTinThietBi = uow.thongTinThietBis.GetAll(x => !x.IsDeleted && x.Id == item.ThongTinThietBi_Id, null, null).Select(x => new { x.TenThietBi }).ToList();
+                var thietbisuachua = uow.thietBiSuaChuas.GetAll(x => !x.IsDeleted && x.Id == item.ThongTinThietBi_Id, null, null).Select(x => new { x.ThongTinThietBi.TenThietBi }).ToList();
                 var donViTinh = uow.DonViTinhs.GetAll(x => !x.IsDeleted && x.Id == item.DonViTinh_Id, null, null).Select(x => new { x.TenDonViTinh }).ToList();
 
                 var infor = new ClassListThietBiSuaChua();
@@ -100,7 +101,7 @@ namespace NETCORE3.Controllers
                 infor.GhiChu = item.GhiChu;
                 infor.SoLuong = item.SoLuong;
                 infor.MaThietBiSuaChua = item.MaThietBiSuaChua;
-                infor.TenThietBiSuaChua = thongTinThietBi[0].TenThietBi;
+                infor.TenThietBiSuaChua = item.ThongTinThietBi.TenThietBi;
                 infor.TenDonVi = donViTinh[0].TenDonViTinh;
                 list.Add(infor);
             }
@@ -113,7 +114,7 @@ namespace NETCORE3.Controllers
         [HttpGet("{id}")]
         public ActionResult Get(Guid id)
         {
-            string[] includes = { "LoaiVatTus" };
+            string[] includes = { "loiThietBiSuaChuas.Loi" };
             var duLieu = uow.thietBiSuaChuas.GetAll(x => !x.IsDeleted && x.Id == id, null, includes);
             if (duLieu == null)
             {
@@ -121,6 +122,8 @@ namespace NETCORE3.Controllers
             }
             return Ok(duLieu);
         }
+
+
         [HttpPost]
         public ActionResult Post(ThietBiSuaChua data)
         {
@@ -152,7 +155,6 @@ namespace NETCORE3.Controllers
                     {
                         item.CreatedBy = Guid.Parse(User.Identity.Name);
                         item.CreatedDate = DateTime.Now;
-                        //item.Loi_Id = thietbisuachua[0].Id;
                         item.ThietBiSuaChua_Id = thietbisuachua[0].Id;
                         uow.loiThietBiSuaChuas.Add(item);
                     }
@@ -168,8 +170,8 @@ namespace NETCORE3.Controllers
                     {
                         item.CreatedBy = Guid.Parse(User.Identity.Name);
                         item.CreatedDate = DateTime.Now;
-                      item.ThietBiSuaChua_Id = id;
-                      // item.Loi_Id = id;
+                        item.ThietBiSuaChua_Id = id;
+                        // item.Loi_Id = id;
                         uow.loiThietBiSuaChuas.Add(item);
                     }
                 }
@@ -233,6 +235,45 @@ namespace NETCORE3.Controllers
             }
         }
 
+
+        [HttpDelete("{id}")]
+        public ActionResult Delete(Guid id)
+        {
+            lock (Commons.LockObjectState)
+            {
+                ThietBiSuaChua duLieu = uow.thietBiSuaChuas.GetById(id);
+                if (duLieu.CreatedBy == Guid.Parse(User.Identity.Name) || Guid.Parse(User.Identity.Name) == Guid.Parse("c662783d-03c0-4404-9473-1034f1ac1caa"))
+                {
+                    if (duLieu == null)
+                    {
+                        return NotFound();
+                    }
+                    var dataCheck = uow.loiThietBiSuaChuas.GetAll(x => !x.IsDeleted && x.ThietBiSuaChua_Id == id).ToList();
+                    foreach (var item in dataCheck)
+                    {
+                        uow.loiThietBiSuaChuas.Delete(item.Id);
+                    }
+                    duLieu.DeletedDate = DateTime.Now;
+                    duLieu.DeletedBy = Guid.Parse(User.Identity.Name);
+                    duLieu.IsDeleted = true;
+                    uow.thietBiSuaChuas.Update(duLieu);
+                    uow.Complete();
+                    return Ok(duLieu);
+                }
+                return StatusCode(StatusCodes.Status409Conflict, "Bạn chỉ có thể chỉnh sửa thông tin thiết bị này");
+            }
+        }
+
+        [HttpDelete("Remove/{id}")]
+        public ActionResult Delete_Remove(Guid id)
+        {
+            lock (Commons.LockObjectState)
+            {
+                uow.thietBiSuaChuas.Delete(id);
+                uow.Complete();
+                return Ok();
+            }
+        }
     }
 
 }

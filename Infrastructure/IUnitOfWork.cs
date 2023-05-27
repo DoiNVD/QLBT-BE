@@ -9,7 +9,6 @@ namespace NETCORE3.Infrastructure
     {
         IMenuRepository Menus { get; }
         INhomRepository Nhoms { get; }
-
         IDonViTinhRepository DonViTinhs { get; }
         IPhongBanRepository phongbans { get; }
         IDonViRepository DonVis { get; }
@@ -40,10 +39,9 @@ namespace NETCORE3.Infrastructure
         IChuyenNgayBaoTriRepository chuyenNgayBaoTris { get; }
         ITieuChuanBaoTriRepository tieuChuanBaoTris { get; }
         IThietBiSuaChuaRepository thietBiSuaChuas { get; }
-
         ILoiThietBiSuaChuaRepository loiThietBiSuaChuas { get; }
-       // IChiTietLoiThietBiSuaChuaRepository chiTietLoiThietBiSuaChuas { get; }
-
+        IThucHienBaoTriRepository thucHienBaoTris { get; }
+        ITinhTrangBaoTriRepository tinhTrangBaoTris { get; }
         int Complete();
   }
 }
